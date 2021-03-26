@@ -1,0 +1,34 @@
+[x] - Logout & Rules for when displaying login and logout
+[x] - Search implementation
+[*] - Account page (or remove)
+[x] - Permissions
+	[x] - Acces rules
+	[x] - Set permissions
+[ ] - Full family tree 
+
+[x] - Date time validation
+[x] - Page titles
+[*] - Website icon
+[x] - Remove family tree
+[*] - Custom Date class
+[x] - Date input to allow before 1970
+
+[ ] - Attribution: <a href="https://www.vectorstock.com/royalty-free-vector/user-icon-vector-19240496">Vector image by VectorStock / Vlad27</a>
+
+[x] - Header for small screen
+[x] - You cannot be your own ancestor
+[x] - Redirect on login
+[x] - On failed input open right accordion
+[ ] - Not found and acces denied pages
+[*] - Able to select edit by click on thing
+
+[*] - Hover over parent shows picture //Use popover with trigger : hover
+[x] - Parent -> Mother Father...
+[*] - Entity edit rules
+[x] - Brothers & Sisters
+[x] - Add relation
+[x] - Landing page
+taskkill /f /im java.exe
+
+family tree display took long since not really tree but more graph
+adhoc difficult due to long compile time
