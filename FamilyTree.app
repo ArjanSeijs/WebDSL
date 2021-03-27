@@ -34,11 +34,12 @@ imports templates
     	
     	var me := Person{firstname := "Me", middlenames := "First of His name", lastname := "Breaker of chains", birthday := Date("01/01/1995"), parents := {father, mother}, family := tree, gender := Male};
     	var wife := Person{firstname := "wife", birthday := Date("02/02/1996"), parents := {fatherL, motherL}, family := tree, gender := Female};
+    	var ex := Person{firstname := "ex", birthday := Date("02/02/1996"), family := tree, gender := Female};
     	var brother := Person{firstname := "brother", birthday := Date("01/01/1995"), parents := {father, mother}, family := tree, gender := Male, description := ("##Title\n some information" as WikiText)};
     	var sister := Person{firstname := "sister", birthday := Date("12/11/1997"), parents := {father, mother}, family := tree, gender := Female};
     	
     	var son := Person{firstname := "son", birthday := Date("03/03/2020"), parents := {me, wife}, family := tree, gender := Male};
-    	var daughter := Person{firstname := "daughter", birthday := Date("05/05/2018"), parents := {me, wife}, family := tree, gender := Female};
+    	var daughter := Person{firstname := "daughter", birthday := Date("05/05/2018"), parents := {me, ex}, family := tree, gender := Female};
     	var daughterL := Person{firstname := "daughter", middlenames := "in", lastname := "law", birthday := Date("05/05/2018"), family := tree, gender := Female};
     	
     	var grandson := Person{firstname := "grandson", birthday := Date("03/03/2020"), parents := {son, daughterL}, family := tree, gender := Male};
@@ -54,7 +55,7 @@ imports templates
     	
 		gFatherM.save(); gFatherF.save(); gMotherF.save(); 
 		father.save(); mother.save();uncle.save(); aunt.save(); fatherL.save(); motherL.save(); 
-		me.save();wife.save();brother.save();sister.save();
+		me.save();wife.save();brother.save();sister.save();ex.save();
 		son.save();daughter.save();daughterL.save();
 		grandson.save();grandddaughter.save();niece.save();
     	

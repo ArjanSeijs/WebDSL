@@ -20,8 +20,8 @@ $(() => {
 	let data = {
 		name: 'Top Level',
 	};
+	
 	let descendantRoot;
-	// +
 	let ancestorRoot;
 	let i = 0;
 

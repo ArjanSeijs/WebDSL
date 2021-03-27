@@ -103,7 +103,7 @@ page family_tree_canvas(p : Person) {
 	includeCSS("d3tree.css")
 	<script src="https://d3js.org/d3.v5.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/d3plus@2"></script>
-	// <script src="//cdnjs.cloudflare.com/ajax/libs/d3plus/1.8.0/d3plus.min.js"></script>
+		
 	<script>
 		let familyJson = {data: ~jsondata}
 	</script>
@@ -113,7 +113,7 @@ page family_tree_canvas(p : Person) {
 	function jsonTree(p : Person, depth : Int) : JSONObject {
 		//Use the root node of tree as dummy 
 		var obj := JSONObject("{}");
-  		obj.put("name", "<" + p.family.name + ">");
+  		obj.put("name", p.name + "'s family tree");
   		var children := JSONArray();
   		var parents := JSONArray();
   		children.put(jsonChild(p, depth));
