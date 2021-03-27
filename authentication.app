@@ -125,6 +125,7 @@ imports editmenu
     // rule page user(*) {true}
     rule page direct_family_tree(p : Person) {canSee(p.family)}
     rule page family_overview(t: FamilyTree) {canSee(t)}
+    rule page family_tree_canvas(p : Person) {canSee(p.family)}
     rule page person_edit(p : Person) {canEdit(p.family)} 
     rule page person(p : Person) {canSee(p.family)}
     rule page search(*) {true}
@@ -133,6 +134,7 @@ imports editmenu
 	rule template personcard(p : Person) {canSee(p.family)} 
 	rule template personcardsmall(p : Person) {canSee(p.family)} 
 	rule template person_edit(p : Person) {canEdit(p.family)} 
+	rule template personresult(p : Person) { canSee(p.family)}
 	
 	rule template family_edit_menu(t : FamilyTree) {canEdit(t)}
 	
@@ -143,6 +145,8 @@ imports editmenu
 	rule template family_edit_add_sibling(t : FamilyTree) {canEdit(t)}
 	rule template family_edit_add_child(t : FamilyTree) {canEdit(t)}
 	rule template family_edit_permissions(t : FamilyTree) {securityContext.principal == t.owner}
+	
+	rule template familyTreeList {loggedIn()}
 	
 	rule template * {true}
 	rule template *(*) {true}

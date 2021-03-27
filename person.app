@@ -66,7 +66,7 @@ page family_overview(t : FamilyTree) {
 template family_overview_cards(t : FamilyTree) {
 	div[class="row"] {
 		for(p : Person in t.people order by p.fullname().toLowerCase().trim()) {
-			div[class="col-md-3 p-1"] {
+			div[class="col-md-4 p-1"] {
 				personcardsmall(p)					
 			}
 		}
@@ -283,23 +283,29 @@ template personcardsmall(p : Person) {
 			}
 		}
 		navigate person(p)[class="stretched-link person-link"]{}
-		if(canEdit(p.family)) {
-			button[onclick := edit_new_sibling(p), class="d-none", name="edit-new-sibling"]
-		
-			button[onclick := edit_add_sibling_p(p), class="d-none", name="edit-add-sibling-p"]
-			button[onclick := edit_add_sibling_s(p), class="d-none", name="edit-add-sibling-s"]
-			
-			button[onclick := edit_new_child_p1(p), class="d-none", name="edit-new-child-p1"]
-			button[onclick := edit_new_child_p2(p), class="d-none", name="edit-new-child-p2"]
-			
-			button[onclick := edit_add_child_p1(p), class="d-none", name="edit-add-child-p1"]
-			button[onclick := edit_add_child_p2(p), class="d-none", name="edit-add-child-p2"]
-			button[onclick := edit_add_child_c(p), class="d-none", name="edit-add-child-c"]
-			
-			button[onclick := edit_new_parent(p), class="d-none", name="edit-new-parent"]
-		}
+		edit_buttons(p)
 		
 	}
+}
+
+template edit_buttons(p : Person) {
+	
+	if(canEdit(p.family)) {
+		button[onclick := edit_new_sibling(p), class="d-none", name="edit-new-sibling"]
+	
+		button[onclick := edit_add_sibling_p(p), class="d-none", name="edit-add-sibling-p"]
+		button[onclick := edit_add_sibling_s(p), class="d-none", name="edit-add-sibling-s"]
+		
+		button[onclick := edit_new_child_p1(p), class="d-none", name="edit-new-child-p1"]
+		button[onclick := edit_new_child_p2(p), class="d-none", name="edit-new-child-p2"]
+		
+		button[onclick := edit_add_child_p1(p), class="d-none", name="edit-add-child-p1"]
+		button[onclick := edit_add_child_p2(p), class="d-none", name="edit-add-child-p2"]
+		button[onclick := edit_add_child_c(p), class="d-none", name="edit-add-child-c"]
+		
+		button[onclick := edit_new_parent(p), class="d-none", name="edit-new-parent"]
+	}
+	
 	
 	action edit_new_sibling(person : Person) {
 		validate(canEdit(p.family), "Not allowed to edit");
@@ -353,6 +359,24 @@ template personcardsmall(p : Person) {
 		validate(canEdit(p.family), "Not allowed to edit");
 		edit_new_parent.p := person;
 	}
+	
+}
+
+template personNavigation(p : Person) {
+	<ul class="pagination pagination-lg" all attributes>
+	    <li class="page-item text-center">
+	       navigate person_edit(p)[class="page-link"]{<i class="fas fa-3x fa-user-edit"></i>}
+	    </li>
+	    <li class="page-item text-center">
+	    	navigate direct_family_tree(p)[class="page-link"]{<i class="fa fa-3x fa-tree"></i>} 
+	    </li>
+	    <li class="page-item text-center">
+	    	navigate family_tree_canvas(p)[class="page-link"]{<i class="fas fa-3x fa-project-diagram"></i>} 
+	    </li>
+	    <li class="page-item text-center">
+	    	navigate family_overview(p.family)[class="page-link"]{<i class="fas fa-3x fa-users"></i>} 
+	    </li>
+	 </ul>
 }
 
 template personcard(p : Person) {
@@ -371,17 +395,7 @@ template personcard(p : Person) {
 					<h1>output(p.fullname()) </h1>
 				}
 				div[class="col-md-2 text-end"]  {
-					<ul class="pagination pagination-lg" style="vertical-align: top;display: inline;">
-					    <li class="page-item text-center">
-					       navigate person_edit(p)[class="page-link"]{<i class="fas fa-3x fa-user-edit"></i>}
-					    </li>
-					    <li class="page-item text-center">
-					    	navigate direct_family_tree(p)[class="page-link"]{<i class="fa fa-3x fa-tree"></i>} 
-					    </li>
-					    <li class="page-item text-center">
-					    	navigate family_overview(p.family)[class="page-link"]{<i class="fas fa-3x fa-users"></i>} 
-					    </li>
-					  </ul>
+					personNavigation(p)[style="vertical-align: top;display: inline;"]
 	            }
 			}
 			div[class="row gx-0"]  {

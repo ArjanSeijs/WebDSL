@@ -8,21 +8,17 @@ imports tree
 imports templates
 
 	init {
-		// Testing data
+		// Demo Data
 		var u1 := User{ username := "user1" password := ("abc" as Secret).digest()  };
     	var u2 := User{ username := "user2" password := ("abc" as Secret).digest()  };
     	var u3 := User{ username := "user3" password := ("abc" as Secret).digest()  };
     	var u4 := User{ username := "user4" password := ("abc" as Secret).digest()  };
-    	u1.save();
-    	u2.save();
-    	u3.save();
-    	u4.save();
+    	u1.save(); u2.save(); u3.save(); u4.save();
     	
     	var tree := FamilyTree{name := "Family Smith", owner := u1};
     	var tree2 := FamilyTree{name := "Jones", owner := u1, public := false, canSee := {u2, u3}, canEdit := {u2}};
-    	tree.save();
-    	tree2.save();
-    	// u.save();
+    	tree.save(); tree2.save();
+    	
     	var gFatherM := Person{firstname := "gFatherM", birthday := Date("06/01/1930"), passingdate := Date("05/10/2019"), family := tree, gender := Male};
     	var gFatherF := Person{firstname := "gFatherF", birthday := Date("02/07/1943"), passingdate := Date("04/10/2018"), family := tree, gender := Male};
     	var gMotherF := Person{firstname := "gMotherF", birthday := Date("04/09/1950"), family := tree, gender := Female};
@@ -30,16 +26,23 @@ imports templates
     	var father := Person{firstname := "father", birthday := Date("06/09/1968"), parents := {gFatherM}, family := tree, gender := Male};
     	var mother := Person{firstname := "mother", birthday := Date("08/09/1967"), parents := {gFatherF, gMotherF}, family := tree, gender := Female};
     	
+    	var uncle := Person{firstname := "uncle", birthday := Date("06/09/1968"), parents := {gFatherM}, family := tree, gender := Male};
+    	var aunt := Person{firstname := "aunt", birthday := Date("08/09/1967"), parents := {gFatherF, gMotherF}, family := tree, gender := Female};
+    	
     	var fatherL := Person{firstname := "father", middlenames:="in", lastname:="law", birthday := Date("02/02/1967"), family := tree, gender := Male};
     	var motherL := Person{firstname := "mother", middlenames:="in", lastname:="law", birthday := Date("03/04/1967"), family := tree, gender := Female};
     	
-    	var me := Person{firstname := "Me", birthday := Date("01/01/1995"), parents := {father, mother}, family := tree, gender := Male};
+    	var me := Person{firstname := "Me", middlenames := "First of His name", lastname := "Breaker of chains", birthday := Date("01/01/1995"), parents := {father, mother}, family := tree, gender := Male};
     	var wife := Person{firstname := "wife", birthday := Date("02/02/1996"), parents := {fatherL, motherL}, family := tree, gender := Female};
     	var brother := Person{firstname := "brother", birthday := Date("01/01/1995"), parents := {father, mother}, family := tree, gender := Male, description := ("##Title\n some information" as WikiText)};
     	var sister := Person{firstname := "sister", birthday := Date("12/11/1997"), parents := {father, mother}, family := tree, gender := Female};
     	
     	var son := Person{firstname := "son", birthday := Date("03/03/2020"), parents := {me, wife}, family := tree, gender := Male};
     	var daughter := Person{firstname := "daughter", birthday := Date("05/05/2018"), parents := {me, wife}, family := tree, gender := Female};
+    	var daughterL := Person{firstname := "daughter", middlenames := "in", lastname := "law", birthday := Date("05/05/2018"), family := tree, gender := Female};
+    	
+    	var grandson := Person{firstname := "grandson", birthday := Date("03/03/2020"), parents := {son, daughterL}, family := tree, gender := Male};
+    	var grandddaughter := Person{firstname := "granddaughter", birthday := Date("05/05/2018"), parents := {son, daughterL}, family := tree, gender := Female};
     	
     	var niece := Person{firstname := "niece", birthday := Date("07/09/2017"), parents := {sister}, family := tree, gender := Other};
     	
@@ -47,35 +50,19 @@ imports templates
     	var r2 := Person{firstname := "Relative2", birthday := Date("01/01/1995"), family := tree, gender := Female};
     	var r3 := Person{firstname := "Relative3", birthday := Date("01/01/1995"), family := tree, gender := Other};
     	var r4 := Person{firstname := "Relative4", birthday := Date("01/01/1995"), family := tree, gender := Male};
+    	r1.save(); r2.save(); r3.save(); r4.save();
     	
-    	r1.save();
-    	r2.save();
-    	r3.save();
-    	r4.save();
-    	
-    	gFatherM.save();
-    	gFatherF.save();
-    	gMotherF.save();
-    	father.save();
-    	mother.save();
-    	fatherL.save();
-    	motherL.save();
-    	me.save();
-    	wife.save();
-    	brother.save();
-    	sister.save();
-    	son.save();
-    	daughter.save();
-    	niece.save();
+		gFatherM.save(); gFatherF.save(); gMotherF.save(); 
+		father.save(); mother.save();uncle.save(); aunt.save(); fatherL.save(); motherL.save(); 
+		me.save();wife.save();brother.save();sister.save();
+		son.save();daughter.save();daughterL.save();
+		grandson.save();grandddaughter.save();niece.save();
     	
 		var p1 := Person{firstname := "Relative", birthday := Date("04/09/2009"), family := tree2, gender := Male};
 		var p2 := Person{firstname := "Father", birthday := Date("04/09/2009"), family := tree2, gender := Male};
 		var p3 := Person{firstname := "Mother", birthday := Date("04/09/2009"), family := tree2, gender := Female};
 		var p4 := Person{firstname := "Person", birthday := Date("04/09/2009"), parents := {p2, p3}, family := tree2, gender := Male, description := "Put description here"};
-		p1.save();
-		p2.save();
-		p3.save();
-		p4.save();
+		p1.save(); p2.save(); p3.save(); p4.save();
 	}
 
 	page root() {
@@ -134,11 +121,11 @@ imports templates
 						if(loggedIn()) {
 							familyTreeList
 						}
+						elements //extra links for other pages
 					</ul>
 					<ul class="navbar-nav">
 						if(loggedIn()) {
 							item[class="nav-link"] {<i class="fa fa-user"></i>" " output( securityContext.principal.username )}
-							// item {navigate account()[class="nav-link"] {<i class="fa fa-user"></i>" " output( securityContext.principal.username )}}
 							item {
 								logoutcard()
 							}
@@ -157,7 +144,7 @@ imports templates
 							}	
 						}
 					</ul>
-					//TODO Functionality
+					
 					form[class="d-flex"] {
 						<div class="input-group">
 						<span class="input-group-text"><i class="fa fa-search"></i></span>

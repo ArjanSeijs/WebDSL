@@ -9,7 +9,12 @@ page direct_family_tree(p : Person) {
 	title {"Family Tree of " output(p.fullname())}
 	includeCSS("tree.css")
 	main {
-		myheader
+		myheader {
+		    item {navigate person_edit(p)[class="nav-link"]{<i class="fas fa-2x fa-user-edit"></i>}}
+		    item {navigate direct_family_tree(p)[class="nav-link"]{<i class="fa fa-2x fa-tree"></i>}}
+		    item {navigate family_tree_canvas(p)[class="nav-link"]{<i class="fas fa-2x fa-project-diagram"></i>}}
+		    item {navigate family_overview(p.family)[class="nav-link"]{<i class="fas fa-2x fa-users"></i>}}
+		}
 		direct_family_tree(p)
 	}
 }
@@ -81,3 +86,100 @@ template treeNodePart(p : Person) {
 		}
 	}
 }
+
+page family_tree_canvas(p : Person) {
+	var jsondata := jsonTree(p, 10)
+	main {
+		myheader {
+		    item {navigate person_edit(p)[class="nav-link"]{<i class="fas fa-2x fa-user-edit"></i>}}
+		    item {navigate direct_family_tree(p)[class="nav-link"]{<i class="fa fa-2x fa-tree"></i>}}
+		    item {navigate family_tree_canvas(p)[class="nav-link"]{<i class="fas fa-2x fa-project-diagram"></i>}}
+		    item {navigate family_overview(p.family)[class="nav-link"]{<i class="fas fa-2x fa-users"></i>}}
+		}
+		div[class="container-fluid w-100 h-100 m-3 overflow-hidden"] {
+			div[id="tree"] {}	
+		}
+	}
+	includeCSS("d3tree.css")
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/d3plus@2"></script>
+	// <script src="//cdnjs.cloudflare.com/ajax/libs/d3plus/1.8.0/d3plus.min.js"></script>
+	<script>
+		let familyJson = {data: ~jsondata}
+	</script>
+	<script src="/FamilyTree/javascript/tree.js"></script>
+}
+
+	function jsonTree(p : Person, depth : Int) : JSONObject {
+		//Use the root node of tree as dummy 
+		var obj := JSONObject("{}");
+  		obj.put("name", "<" + p.family.name + ">");
+  		var children := JSONArray();
+  		var parents := JSONArray();
+  		children.put(jsonChild(p, depth));
+  		for(sibling : Person in p.siblings()) {
+  			children.put(jsonChild(sibling, depth));	
+  		}
+  		for(parent : Person in p.parents) {
+  			parents.put(jsonParent(parent, depth));	
+  		}
+  		obj.put("children", children);
+  		obj.put("parents", parents);
+  		return obj;
+	}
+
+	function json(p : Person) : JSONObject {
+		var obj := JSONObject("{}");
+  		obj.put("name", p.name);
+  		obj.put("gender", p.gender.name);
+  		obj.put("uuid", p.id.toString());
+		return obj;
+	}
+	
+	function jsonChild(child : Person, depth : Int) : JSONObject {
+		var obj := json(child);
+		if(depth > 0) {
+			obj.put("children", jsonChildren(child, depth - 1));
+		}
+		var spouses := JSONArray();
+	  	for(spouse : Person in child.partners()) {
+	  		var s := JSONObject("{}");
+	  		s.put("name", spouse.name);
+	  		s.put("gender", spouse.gender.name);
+	  		spouses.put(s);
+	  	}
+	  	obj.put("spouse", spouses);
+		return obj;
+	}
+	
+	function jsonChildren(p : Person, depth : Int) : JSONArray {
+		var children := JSONArray();
+		for(child : Person in p.children) {
+			children.put(jsonChild(child, depth));
+		}
+		return children;
+	}
+	
+	function jsonParent(parent : Person, depth : Int) : JSONObject {
+		var obj := json(parent);
+		if(depth > 0) {
+			obj.put("parents", jsonParents(parent, depth - 1));
+		}
+		var uncles := JSONArray(); //uncles and aunts
+	  	for(uncle : Person in parent.siblings()) {
+	  		var s := JSONObject("{}");
+	  		s.put("name", uncle.name);
+	  		s.put("gender", uncle.gender.name);
+	  		uncles.put(s);
+	  	}
+	  	obj.put("spouse", uncles); //We use them as spouse to render them in the tree underneath the parents
+		return obj;
+	}
+	
+	function jsonParents(p : Person, depth : Int) : JSONArray {
+		var parents := JSONArray();
+		for(parent : Person in p.parents) {
+			parents.put(jsonParent(parent, depth));
+		}
+		return parents;
+	}
