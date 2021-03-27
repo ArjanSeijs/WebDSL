@@ -1,12 +1,12 @@
-module authentication
+module src/authentication
 
-imports bootstrap
-imports entities
-imports person
-imports authentication
-imports tree
-imports templates
-imports editmenu
+imports src/bootstrap
+imports src/entities
+imports src/person
+imports src/tree
+imports src/templates
+imports src/editmenu
+imports src/header
 
 	template logoutcard() {
 		form {submitlink signoffAction()[class="nav-link"]{"Logout" }}
@@ -121,8 +121,7 @@ imports editmenu
 	rule page loginPage() {true}
 	rule page register(){true}
     rule page root(){true}
-    // rule page account(){loggedIn()}
-    // rule page user(*) {true}
+    
     rule page direct_family_tree(p : Person) {canSee(p.family)}
     rule page family_overview(t: FamilyTree) {canSee(t)}
     rule page family_tree_canvas(p : Person) {canSee(p.family)}

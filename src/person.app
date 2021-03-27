@@ -1,10 +1,11 @@
-module person
+module src/person
 
 imports FamilyTree
-imports entities
-imports tree
-imports templates
-imports editmenu
+imports src/entities
+imports src/tree
+imports src/templates
+imports src/editmenu
+imports src/header
 
 
 

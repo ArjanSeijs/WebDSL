@@ -1,4 +1,4 @@
-module entities
+module src/entities
 
 imports search/searchconfiguration
 /*

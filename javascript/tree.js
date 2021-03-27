@@ -165,6 +165,7 @@ $(() => {
 	//https://stackoverflow.com/questions/24784302/wrapping-text-in-d3
 	// 
 	function wrap(text, width) {
+		const pxToEm = 0.0833; // em to px ratio for size = 12px
 	    text.each(function () {
 	        var text = d3.select(this),
 	            words = text.text().split(/\s+/).reverse(),
@@ -174,7 +175,7 @@ $(() => {
 	            lineHeight = 1.1, // ems
 	            x = text.attr("x"),
 	            y = text.attr("y"),
-	            dy = 0, //parseFloat(text.attr("dy")),
+	            dy = parseFloat(text.attr("dy")) * pxToEm, //
 	            tspan = text.text(null)
 	                        .append("tspan")
 	                        .attr("x", x)
@@ -302,6 +303,8 @@ $(() => {
 				d3.select(this).append('text')
 					.classed('spouse-name', true)
 					.classed(type, true)
+					.attr('x', 0) //++++
+					.attr('y', 0) //++++
 					.attr('dy', boxH * j)
 					.attr('text-anchor', 'middle')
 					.attr('style', d => {

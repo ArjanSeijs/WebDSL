@@ -1,4 +1,4 @@
-module templates
+module src/templates
 
 	template a() {
 		<a all attributes>

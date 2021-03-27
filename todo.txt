@@ -4,7 +4,7 @@
 [x] - Permissions
 	[x] - Acces rules
 	[x] - Set permissions
-[ ] - Full family tree 
+[x] - Full family tree 
 
 [x] - Date time validation
 [x] - Page titles

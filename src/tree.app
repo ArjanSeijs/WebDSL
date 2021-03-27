@@ -1,8 +1,9 @@
-module tree
+module src/tree
 
 imports FamilyTree
-imports entities
-imports templates
+imports src/entities
+imports src/templates
+imports src/header
 
 page direct_family_tree(p : Person) {
 	
@@ -20,7 +21,7 @@ page direct_family_tree(p : Person) {
 }
 
 template direct_family_tree( p : Person) {
-	div[class="container p-3"] {
+	div[class="container-flex p-3"] {
 		div[class="tree"] {
 			ul {
 				if(p.parents.length == 1) {

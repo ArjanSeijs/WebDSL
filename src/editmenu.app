@@ -1,9 +1,10 @@
-module editmenu
+module src/editmenu
 
 imports FamilyTree
-imports entities
-imports tree
-imports templates
+imports src/entities
+imports src/tree
+imports src/templates
+imports src/header
 
 native class java.util.UUID as UID {
   static fromString(String) : UID
