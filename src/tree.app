@@ -21,13 +21,13 @@ page direct_family_tree(p : Person) {
 }
 
 template direct_family_tree( p : Person) {
-	div[class="container-flex p-3"] {
+	div[class="container-flex min-h-75 p-3"] {
 		div[class="tree"] {
 			ul {
 				if(p.parents.length == 1) {
 					li {
 						div {
-						treeNodePart(p.parents[0])
+							treeNodePart(p.parents[0])
 						}
 						ul {
 							for(sibling : Person in p.siblings()) {
