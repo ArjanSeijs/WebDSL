@@ -7,6 +7,7 @@ imports src/tree
 imports src/templates
 imports src/editmenu
 imports src/header
+imports src/service
 
 	template logoutcard() {
 		form {submitlink signoffAction()[class="nav-link"]{"Logout" }}
@@ -151,3 +152,9 @@ imports src/header
 	rule template *(*) {true}
 	
 	rule ajaxtemplate descpreview(p:Person){canEdit(p.family)}
+	
+	rule page user_register {true}
+	rule page user_login {true}
+	rule page user_logout {true}
+	rule page user_name {true}
+	rule page user_families {loggedIn()}

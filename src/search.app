@@ -1,11 +1,20 @@
 module src/search
 
 
-	
-	
  	
+ 	function searchtree(q : String) : List<FamilyTree> {
+ 		var s := search FamilyTree matching escapeQuery(q);
+ 		var trees := results from s;
+ 		return [t |t : FamilyTree in trees where canSee(t) limit 10];
+ 	}
+ 	
+ 	function searchperson(q : String) : List<Person> {
+ 		var s := search Person matching escapeQuery(q);
+ 		var persons := results from s;
+ 		return [p |p : Person in persons where canSee(p.family) limit 50];
+ 	}
+
 	page search(q : String) {
-		// var resulsts := Entry completions matching codeIdentifiers, fileName: q in namespace namespace limit 20
 		var persons := searchperson(q)
 		var tree := searchtree(q)
 		

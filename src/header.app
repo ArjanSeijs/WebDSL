@@ -2,6 +2,7 @@ module src/header
 
 
 imports src/search
+imports src/templates
 
 template myheader() {
 		var q : String
@@ -103,17 +104,3 @@ template myheader() {
 		  	</ul>
 		}
 	}
- 	
- 	function searchtree(q : String) : List<FamilyTree> {
-		log(q);
- 		var s := search FamilyTree matching escapeQuery(q);
- 		var trees := results from s;
- 		return [t |t : FamilyTree in trees where canSee(t) limit 10];
- 	}
- 	
- 	function searchperson(q : String) : List<Person> {
-		log(q);
- 		var s := search Person matching escapeQuery(q);
- 		var persons := results from s;
- 		return [p |p : Person in persons where canSee(p.family) limit 50];
- 	}

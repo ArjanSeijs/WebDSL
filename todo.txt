@@ -13,8 +13,6 @@
 [*] - Custom Date class
 [x] - Date input to allow before 1970
 
-[ ] - Attribution: <a href="https://www.vectorstock.com/royalty-free-vector/user-icon-vector-19240496">Vector image by VectorStock / Vlad27</a>
-
 [x] - Header for small screen
 [x] - You cannot be your own ancestor
 [x] - Redirect on login
@@ -32,3 +30,5 @@ taskkill /f /im java.exe
 
 family tree display took long since not really tree but more graph
 adhoc difficult due to long compile time
+
+reactjs problem when using effects or something on illegal place

@@ -27,7 +27,7 @@ template bootstrapJavaScript {
 
 template main {
 	bootstrapHeader
-	<body style="background-color: antiquewhite !important;">
+	<body>
 	elements
 	</body>
 	bootstrapJavaScript

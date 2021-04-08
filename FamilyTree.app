@@ -8,6 +8,8 @@ imports src/tree
 imports src/templates
 imports src/header
 imports src/search
+imports src/service
+imports src/search
 
 	init {
 		// Demo Data

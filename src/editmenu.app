@@ -303,6 +303,7 @@ template family_edit_add_sibling(t : FamilyTree) {
 		t.save();
 		edit_add_sibling.sibling.save();
 		edit_add_sibling.p.save();
+		message("Succesfully added sibling relation");
 	}
 }
 
@@ -383,6 +384,7 @@ template family_edit_add_child(t : FamilyTree) {
 		}
 		edit_add_child.child.save();
 		t.save();
+		message("Succesfully added child-parent relation");
 	}
 }
 
