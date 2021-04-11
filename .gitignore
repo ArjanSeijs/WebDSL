@@ -12,3 +12,4 @@ clean-project.xml
 reposearch clean-project.xml.launch
 .classpath
 .project
+searchindex
