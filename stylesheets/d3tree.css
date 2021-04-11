@@ -50,3 +50,11 @@
 .expand-icon {
 	font-size: 16px;
 }
+
+.hover-link {
+	text-decoration : none;
+}
+.hover-link:hover {
+	text-decoration : underline;
+	color : #337ab7
+}

@@ -3,10 +3,12 @@
  *
  * Initially based on the collapsible tree example: https://bl.ocks.org/d3noob/43a860bc0024792f8803bba8ca0d5ecd
  *
- * ++ SOURCE https://github.com/trongthanh/family-tree
- * ++ LICENSE https://github.com/trongthanh/family-tree/blob/master/LICENSE
- * ++ SOURCE https://github.com/justincy/d3-pedigree-examples
- * ++ LICENSE https://github.com/justincy/d3-pedigree-examples/blob/gh-pages/LICENSE
+ * ++ ORIGNAL SOURCE https://github.com/trongthanh/family-tree
+ * ++ MIT LICENSE https://github.com/trongthanh/family-tree/blob/master/LICENSE
+ * ++ Adjustments partly taken from
+ * ++ SOURCE https://github.com/justincy/d3-pedigree-examples Copyright (c) 2015 Justin York
+ * ++ MIT LICENSE https://github.com/justincy/d3-pedigree-examples/blob/gh-pages/LICENSE
+ * 
  * ++ Edited by Arjan Seijs
  */
 $(() => {
@@ -98,6 +100,7 @@ $(() => {
 			descendantRoot.children.forEach(collapse);
 		}
 		
+		// <++++
 		// Assigns parent, children, height, depth
 		ancestorRoot = d3.hierarchy(rootProxy(data), d => d.parents);
 		ancestorRoot.x0 = 0 //height / 2;
@@ -110,9 +113,8 @@ $(() => {
 
 		update(descendantRoot, 1, 'descendant');
 		update(ancestorRoot, -1, 'ancestor');
+		// +++++>
 	}
-
-	// $.get('data/greek-gods.yml').done(parseData);
 
 	// declares a tree layout and assigns the size
 	function getTree() {
@@ -226,7 +228,7 @@ $(() => {
 			.attr('width', d => d.data.boxW || boxW)
 			.attr('height', boxH)
 			.on('click', (d) => click(d, direction, type))
-			.on('dblclick', dblclick);
+//			.on('dblclick', dblclick);
 
 		// Add person block
 		const personBlock = nodeEnter.append('g').attr('transform', d => {
@@ -254,6 +256,9 @@ $(() => {
 
 		// Add labels for the nodes
 		personBlock
+			.append('svg:a') // ++
+			.attr('xlink:href', (d) => personUrl(d.data?.uuid)) //++
+			.classed('hover-link', true)
 			.append('text')
 			.attr('x', 0) //++++
 			.attr('y', 0) //++++
@@ -300,7 +305,11 @@ $(() => {
 						}
 						return 'box';
 					})
-				d3.select(this).append('text')
+				d3.select(this)
+					.append('svg:a') // ++
+					.attr('xlink:href', () => personUrl(d.data.spouse[j]?.uuid)) //++
+					.classed('hover-link', true)
+					.append('text')
 					.classed('spouse-name', true)
 					.classed(type, true)
 					.attr('x', 0) //++++
@@ -463,6 +472,12 @@ $(() => {
 	function dblclick(d) {
 		if(d.data.uuid) {
 			window.location.href = "/FamilyTree/person/"+d.data.uuid;			
+		}
+	}
+	
+	function personUrl(uuid) {
+		if(uuid) {
+			return "/FamilyTree/person/" + uuid;
 		}
 	}
 	// < ++++

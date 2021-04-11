@@ -158,10 +158,7 @@ function jsonChild(child : Person, depth : Int) : JSONObject {
 	}
 	var spouses := JSONArray();
   	for(spouse : Person in child.partners()) {
-  		var s := JSONObject("{}");
-  		s.put("name", spouse.name);
-  		s.put("gender", spouse.gender.name);
-  		spouses.put(s);
+  		spouses.put(json(spouse));
   	}
   	obj.put("spouse", spouses);
 	return obj;
@@ -183,10 +180,7 @@ function jsonParent(parent : Person, depth : Int) : JSONObject {
 	}
 	var uncles := JSONArray(); //uncles and aunts
   	for(uncle : Person in parent.siblings()) {
-  		var s := JSONObject("{}");
-  		s.put("name", uncle.name);
-  		s.put("gender", uncle.gender.name);
-  		uncles.put(s);
+  		uncles.put(json(uncle));
   	}
   	obj.put("spouse", uncles); //We use them as spouse to render them in the tree underneath the parents
 	return obj;

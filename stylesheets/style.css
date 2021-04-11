@@ -49,7 +49,3 @@ body {
 .card-title {
   font-weight: bold;
 }
-
-.node--has-children {
-	cursor : pointer;
-}
