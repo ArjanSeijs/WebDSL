@@ -6,10 +6,6 @@ imports src/tree
 imports src/templates
 imports src/header
 
-native class java.util.UUID as UID {
-  static fromString(String) : UID
-}
-
 template family_edit_menu(t : FamilyTree) {
 	//https://getbootstrap.com/docs/5.0/components/accordion/
 	div[class="accordion bg-white sticky-top", id="family_edit_menu"] {
@@ -168,6 +164,7 @@ template family_edit_permissions(t : FamilyTree) {
 	action permission() {
 		var user := findUser(username);
 		validate(user != null, "User does not exists");
+		validate(view || edit, "Select permissions to add!");
 		if(view) {
 			t.canSee.add(user);
 		}
@@ -234,15 +231,7 @@ template family_edit_new_sibling(t : FamilyTree) {
 	var sibling := Person{}
 	
 	form[onsubmit = "redirecthash(this)"] {
-		label("Add sibling to: ")[class="form-label"] {
-			div[class="input-group"] {
-				select(edit_new_sibling.p, t.people.list())[class="form-control"]
-					div[class="input-group-append"] {
-	    			button[class="btn btn-outline-secondary", type="button", onclick:="selectmode('edit-new-sibling')"]{<i class="fas fa-user-tag"></i>}
- 				}	
-			}
-			
-		}
+		personselector(t,"Add sibling to: ", edit_new_sibling.p, "edit-new-sibling")
 		family_edit_person(sibling)
 		submit save()[class="btn btn-primary"] {<i class="fas fa-user-plus"></i>}
 	}
@@ -276,12 +265,7 @@ template family_edit_add_sibling(t : FamilyTree) {
 	form[onsubmit = "redirecthash(this)"] {
 		personselector(t, "Add", edit_add_sibling.p, "edit-add-sibling-p")
 		personselector(t, "as sibling to", edit_add_sibling.sibling, "edit-add-sibling-s")
-		// label("Add")[class="form-label"] { 
-		//     select(edit_add_sibling.p, t.people.list())[class="form-control w-100"]
-		// }
-		// label("as sibling to: ")[class="form-label"] { 
-		//     select(edit_add_sibling.sibling, t.people.list())[class="form-control w-100"]
-		// }
+		messages
 		submit save()[class="btn btn-primary"] {<i class="fa fa-user-plus"></i>}
 	}
 	action save() {
@@ -317,12 +301,7 @@ template family_edit_new_child(t : FamilyTree) {
 	form[onsubmit = "redirecthash(this)"] {
 		personselector(t, "Add child to: ", edit_new_child.p1, "edit-new-child-p1")
 		personselector(t, "With: ", edit_new_child.p2, "edit-new-child-p2")
-		// label("Add Child to: ")[class="form-label"] { 
-		//     select(edit_new_child.p1, t.people.list())[class="form-control w-100"]
-		// }
-		// label("With: ")[class="form-label"] { 
-		//     select(edit_new_child.p2, t.people.list())[class="form-control w-100"]
-		// }
+		messages
 		family_edit_person(child)
 		submit save()[class="btn btn-primary"] {<i class="fas fa-user-plus"></i>}
 	}
@@ -356,15 +335,7 @@ template family_edit_add_child(t : FamilyTree) {
 		personselector(t, "Add child to: ", edit_add_child.p1, "edit-add-child-p1")
 		personselector(t, "With: ", edit_add_child.p2, "edit-add-child-p2")
 		personselector(t, "Child: ", edit_add_child.child, "edit-add-child-c")
-		// label("Add Child to: ")[class="form-label"] { 
-		//     select(edit_add_child.p1, t.people.list())[class="form-control w-100"]
-		// }
-		// label("With: ")[class="form-label"] { 
-		//     select(edit_add_child.p2, t.people.list())[class="form-control w-100"]
-		// }
-		// label("Child: ")[class="form-label"] { 
-		//     select(edit_add_child.child, t.people.list())[class="form-control w-100"]
-		// }
+		messages
 		submit save()[class="btn btn-primary"] {<i class="fa fa-user-plus"></i>}
 	}
 	
@@ -396,10 +367,8 @@ template family_edit_new_parent(t : FamilyTree) {
 	var parent := Person{}
 	form[onsubmit = "redirecthash(this)"] {
 		personselector(t, "Add Parent to: ", edit_new_parent.p, "edit-new-parent")
-		// label("Add Parent to: ")[class="form-label"] { 
-		//     select(edit_new_parent.p, t.people.list())[class="form-control w-100"]
-		// }
 		family_edit_person(parent)
+		messages
 		submit save()[class="btn btn-primary"] {<i class="fas fa-user-plus"></i>}
 	}
 	

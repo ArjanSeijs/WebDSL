@@ -204,7 +204,7 @@ template personedit(p : Person) {
 					
 					div[class="col-md-4"] {
 						label("Upload Image: ")[class="form-label"] {
-							input(p.icon)[class="form-control w-100"]
+							input(p.icon)[class="form-control w-100", id="image-upload"]
 						}
 					}
 					
@@ -215,7 +215,7 @@ template personedit(p : Person) {
 						}
 					}
 					div[class="col-md-4"] {
-						userImage(p)
+						userImage(p)[id="image-preview", onChange="showFile(this)"]
 					}
 					
 					//next row
@@ -229,6 +229,11 @@ template personedit(p : Person) {
 					}
 				}
 			</article>	
+			<script>
+			function showFile(f) {
+				
+			}
+			</script>
 		}
 	}	
 	confirm_modal(p.name){submit delete()[class="btn btn-primary"]{<i class="fa fa-check-square hov-pointer"></i>}}
@@ -270,22 +275,32 @@ define ajax descpreview(p : Person) {
 template personcardsmall(p : Person) {
 	card {
 		userImage(p)[class="small"]
-		div[class="card-body"] {
-			h5 {output(p.fullname())}
-			ul[class="list-group list-group-flush"] {
-				person_item("Gender"){output( p.gender)}
-				person_item("Birthday"){output( p.birthday)}
-				person_item("Birth Place"){output( p.birthplace)}
-				person_item("Day of passing"){output(p.passingdate)}
-				person_item("Age"){output(p.getAge() + " years")}
-				for(parent : Person in p.parents) {
-					person_item("Parent"){output(parent.fullname())}
-				}
-			}
+		div[class="card-body p-0"] {
+			h5[class="p-2"] {output(p.fullname())}
+			person_info(p)
 		}
 		navigate person(p)[class="stretched-link person-link"]{}
 		edit_buttons(p)
 		
+	}
+}
+
+template person_info(p : Person) {
+	ul[class="list-group list-group-flush"] {
+		person_item("fas fa-venus-mars", "Gender", true){output( p.gender)}
+		person_item("fas fa-birthday-cake", "Birthday", true){output( p.birthday)}
+		person_item("fas fa-city", "Birth Place", p.birthplace != null && p.birthplace.length() > 0){output( p.birthplace)}
+		person_item("fas fa-cross", "Alive", p.passingdate != null){output(p.passingdate)}
+		person_item("fas fa-birthday-cake", "Age", true){output(p.getAge() + " years")}
+		for(parent : Person in p.parents) {
+			person_item("fas fa-user", "Parent", true){output(parent.fullname())}
+		}
+		if(p.parents.length < 2) {
+			person_item("fas fa-user", "Parent", false)
+		}
+		if(p.parents.length < 1) {
+			person_item("fas fa-user", "Parent", false)
+		}
 	}
 }
 
@@ -477,6 +492,22 @@ template userImage(p : Person) {
 		output(p.icon)[class="user-image", all attributes]
 	} else {
 		image("/images/user-default.png")[class="user-image", all attributes]
+	}
+}
+
+template person_item(symbol : String, placehold : String, value : Bool) {
+	li[class="list-group-item"] {
+		div[class="float-start"] {
+			faIcon[class=symbol]
+		}
+		div[class="float-end"] {
+			if(value) {
+				elements				
+			} else {
+				<span class="text-muted">output(placehold)</span>
+			}
+			
+		}
 	}
 }
 

@@ -24,6 +24,11 @@ module src/templates
 		</li>
 	}
 	
+	template faIcon {
+		<i all attributes>
+		</i>
+	}
+	
 	template button {
 		<button type="button" all attributes>
 			elements

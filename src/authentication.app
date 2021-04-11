@@ -8,6 +8,7 @@ imports src/templates
 imports src/editmenu
 imports src/header
 imports src/service
+imports src/search
 
 	template logoutcard() {
 		form {submitlink signoffAction()[class="nav-link"]{"Logout" }}
@@ -20,6 +21,7 @@ imports src/service
 	template registercard() {
 		//https://getbootstrap.com/docs/5.0/forms/input-group/
 		var user := User{}
+  		var p : Secret
 		<div class="card">
 		
 		<article class="card-body">
@@ -42,6 +44,14 @@ imports src/service
 			    	<div class="input-group mb-3">
 			    		<span class="input-group-text"><i class="fa fa-lock"></i> </span>
 			    		input(user.password)[class="form-control"] 
+			    	</div>
+			    }
+			    label("Repeat Password: ")[class="form-label"] {
+			    	<div class="input-group mb-3">
+			    		<span class="input-group-text"><i class="fa fa-lock"></i> </span>
+			    		input(p)[class="form-control"] {
+			    			validate(user.password == p, "Password does not match") 
+			    		} 
 			    	</div>
 			    }
 			    submit register()[class="btn btn-primary"] {"Register "}
@@ -104,11 +114,36 @@ imports src/service
 		}
 	}
 	
+	override page pagenotfound() {
+		title{ "myapp / page not found (404)" }
+		main {
+			myheader
+			<div class="d-flex justify-content-center">
+				par{ "That page does not exist!" }
+			</div>
+		}
+	}
 	
+	override page accessDenied() {
+		title{ "myapp / acces denied (401)" }
+		main {
+			myheader
+			<div class="d-flex justify-content-center">
+				image("https://imgs.xkcd.com/comics/incident.png")
+			</div>
+		}
+	}
+	
+	/*
+	Check whether the current user (if logged in) has the permission to edit this family tree
+	*/
 	function canEdit(t : FamilyTree) : Bool {
 		return loggedIn() && (securityContext.principal == t.owner || securityContext.principal in t.canEdit);
 	}
 	
+	/*
+	Check whether the current user (if logged in) has the permission to view this family tree
+	*/
 	function canSee(t : FamilyTree) : Bool {
 		return t.public || (loggedIn() && (securityContext.principal == t.owner || securityContext.principal in t.canSee));
 	}
@@ -117,11 +152,10 @@ imports src/service
 
   	access control rules
   	
-  	
-  	
 	rule page loginPage() {true}
 	rule page register(){true}
     rule page root(){true}
+    rule page accessDenied() {true}
     
     rule page direct_family_tree(p : Person) {canSee(p.family)}
     rule page family_overview(t: FamilyTree) {canSee(t)}
@@ -153,8 +187,22 @@ imports src/service
 	
 	rule ajaxtemplate descpreview(p:Person){canEdit(p.family)}
 	
+	// Acces rule for services
 	rule page user_register {true}
 	rule page user_login {true}
 	rule page user_logout {true}
 	rule page user_name {true}
+	
 	rule page user_families {loggedIn()}
+	rule page user_newFamily() {loggedIn()}
+	
+	rule page user_people(f : FamilyTree) {canSee(f)}
+	rule page user_person(p : Person) {canSee(p.family)}
+	rule page getImageFile(p : Person) {canSee(p.family)}
+	
+	rule page user_setFamilyName(f : FamilyTree) {canEdit(f)}
+	rule page user_newPerson(f : FamilyTree) {canEdit(f)}
+	rule page user_editPerson(p : Person) {canEdit(p.family)}
+	rule page user_validParents(p : Person) {canEdit(p.family)}
+	
+	rule page sv_search(*) {true}

@@ -27,6 +27,7 @@ enum Gender {
 A family tree is a collection of people that belong to the same family
 */
 entity FamilyTree {
+	
 	name : String (not null, validate(name.length() > 0, "Family Tree must have a name"), searchable)
 	owner -> User (inverse=User.trees)
 	people -> {Person} (inverse=Person.family)
@@ -59,7 +60,7 @@ The parents (and children) attributes are used to keep track of relation ships w
 These attributes are then used to compute siblings, partners etc. 
 */
 entity Person {
-	name :: String := fullname() + " (" + birthday + ")" //display name
+	name :: String := fullname() + " (" + birthday + ")" //display name for inputs
 	
 	fullname :: String := fullname()
 	/* Names */
@@ -128,10 +129,10 @@ entity Person {
 	*/
 	function fullname() : String {
 		var fullname : String := firstname;
-		if(middlenames != null) {
+		if(middlenames != null && middlenames.length() > 0) {
 			fullname := fullname + " " + middlenames;
 		}
-		if(lastname != null) {
+		if(lastname != null && lastname.length() > 0) {
 			fullname := fullname + " " + lastname;
 		}
 		return fullname;
