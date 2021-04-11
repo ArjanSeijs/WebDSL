@@ -8,7 +8,7 @@ imports src/header
 
 
 
-// Buttons to update the session values for use in the edit menu, these are hiddend and handled through javascript.
+// Buttons to update the session values for use in the edit menu, these are hiddend and the actions are executed through javascript.
 template edit_buttons(p : Person) {
 	
 	if(canEdit(p.family)) {
@@ -86,6 +86,10 @@ template edit_buttons(p : Person) {
 template family_edit_menu(t : FamilyTree) {
 	//https://getbootstrap.com/docs/5.0/components/accordion/
 	div[class="accordion bg-white sticky-top", id="family_edit_menu"] {
+		<div class="border border-1 text-center">
+			<h2 class="mx-auto">"Edit Menu"</h2>
+			messages
+		</div>
 		family_edit_menu_item("Add Family Member", "new_person") {
 			family_edit_new_person(t)
 		}
@@ -110,7 +114,10 @@ template family_edit_menu(t : FamilyTree) {
 			}	
 		}
 	}
+	
 	<script>
+	// Script to auto uncollapse the last clicked item based on the hash in the url
+	
 	var myCollapsible = document.getElementById('family_edit_menu')
 	myCollapsible.addEventListener('show.bs.collapse', function (e) {
 		window.location.hash = e.originalTarget.id
@@ -279,7 +286,7 @@ template family_edit_new_person(t : FamilyTree) {
 	var p := Person{}
 	form[onsubmit = "redirecthash(this)"] {
 		family_edit_person(p)
-		submit save()[class="btn btn-primary"] {<i class="fas fa-user-plus"></i>}
+		submit save()[class="btn btn-primary", ajax] {<i class="fas fa-user-plus"></i>}
 	}
 	action save() {
 		t.people.add(p);
@@ -291,7 +298,7 @@ template family_edit_new_person(t : FamilyTree) {
 template personselector(t : FamilyTree, lbl : String, p : ref Person, selectmode : String) {
 	label(lbl)[class="form-label"] {
 			div[class="input-group"] {
-				selectajax(p, t.people.list())[class="form-control"]
+				selectajax(p, t.getPeople())[class="form-control"]
 					div[class="input-group-append"] {
 	    			button[class="btn btn-outline-secondary", type="button", onclick:="selectmode('"+selectmode+"')"]{<i class="fas fa-user-tag"></i>}
  				}	
@@ -310,7 +317,7 @@ template family_edit_new_sibling(t : FamilyTree) {
 	form[onsubmit = "redirecthash(this)"] {
 		personselector(t,"Add sibling to: ", edit_new_sibling.p, "edit-new-sibling")
 		family_edit_person(sibling)
-		submit save()[class="btn btn-primary"] {<i class="fas fa-user-plus"></i>}
+		submit save()[class="btn btn-primary", ajax] {<i class="fas fa-user-plus"></i>}
 	}
 	action save() {
 		validate(edit_new_sibling.p != null, "Select person");
@@ -318,7 +325,7 @@ template family_edit_new_sibling(t : FamilyTree) {
 		if(edit_new_sibling.p.parents.length > 0 ) {
 			sibling.parents.addAll(edit_new_sibling.p.parents);	
 		} else {
-			var parent : Person := Person{firstname:="Unkown parent", birthday := Date("01/01/1971"), gender := Other};
+			var parent : Person := Person{firstname:="Unknown parent", birthday := Date("01/01/1971"), gender := Other};
 			sibling.parents.add(parent);
 			edit_new_sibling.p.parents.add(parent);
 			t.people.add(parent);
@@ -342,8 +349,7 @@ template family_edit_add_sibling(t : FamilyTree) {
 	form[onsubmit = "redirecthash(this)"] {
 		personselector(t, "Add", edit_add_sibling.p, "edit-add-sibling-p")
 		personselector(t, "as sibling to", edit_add_sibling.sibling, "edit-add-sibling-s")
-		messages
-		submit save()[class="btn btn-primary"] {<i class="fa fa-user-plus"></i>}
+		submit save()[class="btn btn-primary", ajax] {<i class="fa fa-user-plus"></i>}
 	}
 	action save() {
 		validate(edit_add_sibling.p != null && edit_add_sibling.sibling != null, "Select person");
@@ -377,10 +383,9 @@ template family_edit_new_child(t : FamilyTree) {
 	var child := Person{}
 	form[onsubmit = "redirecthash(this)"] {
 		personselector(t, "Add child to: ", edit_new_child.p1, "edit-new-child-p1")
-		personselector(t, "With: ", edit_new_child.p2, "edit-new-child-p2")
-		messages
+		personselector(t, "[With: ]", edit_new_child.p2, "edit-new-child-p2")
 		family_edit_person(child)
-		submit save()[class="btn btn-primary"] {<i class="fas fa-user-plus"></i>}
+		submit save()[class="btn btn-primary", ajax] {<i class="fas fa-user-plus"></i>}
 	}
 	
 	action save() {
@@ -410,10 +415,9 @@ session edit_add_child {
 template family_edit_add_child(t : FamilyTree) {
 	form[onsubmit = "redirecthash(this)"] {
 		personselector(t, "Add child to: ", edit_add_child.p1, "edit-add-child-p1")
-		personselector(t, "With: ", edit_add_child.p2, "edit-add-child-p2")
+		personselector(t, "[With: ]", edit_add_child.p2, "edit-add-child-p2")
 		personselector(t, "Child: ", edit_add_child.child, "edit-add-child-c")
-		messages
-		submit save()[class="btn btn-primary"] {<i class="fa fa-user-plus"></i>}
+		submit save()[class="btn btn-primary", ajax] {<i class="fa fa-user-plus"></i>}
 	}
 	
 	action save() {
@@ -445,8 +449,7 @@ template family_edit_new_parent(t : FamilyTree) {
 	form[onsubmit = "redirecthash(this)"] {
 		personselector(t, "Add Parent to: ", edit_new_parent.p, "edit-new-parent")
 		family_edit_person(parent)
-		messages
-		submit save()[class="btn btn-primary"] {<i class="fas fa-user-plus"></i>}
+		submit save()[class="btn btn-primary", ajax] {<i class="fas fa-user-plus"></i>}
 	}
 	
 	action save() {

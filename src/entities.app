@@ -36,6 +36,10 @@ entity FamilyTree {
 	canSee -> {User}
 	canEdit -> {User} (allowed=from User as u where u in canSee)
 	
+	function getPeople() : List<Person> {
+		return [p | p in this.people order by p.fullname()];
+	}
+	
 	static function delete(t : FamilyTree) {
 		for(p : Person in t.people) {
 			Person.delete(p);
@@ -234,7 +238,43 @@ entity Person {
 			c.parents.remove(p);
 		}
 		p.family.people.remove(p);
+		// Clear this parent from edit session
+		Person.clearSession(p);
+		
 		p.delete();
+	}
+	
+	static function clearSession(p : Person) {
+		if (edit_new_sibling.p == p) {
+			edit_new_sibling.p := null;
+		}
+		if (edit_add_sibling.p == p) {
+			edit_add_sibling.p := null;
+		}
+		if (edit_add_sibling.sibling == p) {
+			edit_add_sibling.sibling := null;
+		}
+			
+		if (edit_new_child.p1 == p) {
+			edit_new_child.p1 := null;
+		}
+		if (edit_new_child.p2 == p) {
+			edit_new_child.p2 := null;
+		}
+			
+		if (edit_add_child.p1 == p) {
+			edit_add_child.p1 := null;
+		}
+		if (edit_add_child.p2 == p) {
+			edit_add_child.p2 := null;
+		}
+		if (edit_add_child.child == p) {
+			edit_add_child.child := null;
+		}
+			
+		if (edit_new_parent.p == p) {
+			edit_new_parent.p := null;
+		}
 	}
 }
 

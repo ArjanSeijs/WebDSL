@@ -54,112 +54,6 @@ page person(p : Person) {
 	
 }
 
-page family_overview(t : FamilyTree) {
-	title {"Family: " output(t.name)}
-	main {
-		myheader
-		div[class="container p-2"] {
-			family_overview_header(t)
-			div[class="row"] {
-				if(canEdit(t)) {
-					div[class="col col-md-9"] {
-						family_overview_cards(t)
-					}
-					div[class="col col-md-3"] {
-						family_edit_menu(t)
-					}
-				} else {
-					family_overview_cards(t)
-				}
-			}
-		}
-	}
-	if(loggedIn() && securityContext.principal == t.owner){
-		// Toggle visibilty of edit field
-		<script>
-		function toggle() {
-			$('#name').toggleClass('d-none');
-			$('#edit_name').toggleClass('d-none');
-		}
-		</script>
-	}
-	if(loggedIn() && securityContext.principal == t.owner) {
-		confirm_delete(t)	
-	}
-	
-}
-
-template family_overview_cards(t : FamilyTree) {
-	div[class="row"] {
-		for(p : Person in t.people order by p.fullname().toLowerCase().trim()) {
-			div[class="col-md-4 p-1"] {
-				personcardsmall(p)					
-			}
-		}
-	}
-}
-
-template family_overview_header(t : FamilyTree) {
-	h1[id="name"] {
-		output(t.name)	" " 
-		// Toggle button
-		if(loggedIn() && securityContext.principal == t.owner){
-			<i class="fas fa-edit hov-pointer" onclick="toggle()"></i>
-		}
-	}
-	// Content to be toggled
-	if(loggedIn() && securityContext.principal == t.owner){
-		div[id="edit_name", class="bg-white d-none"] {
-			form {
-				div[class="input-group mb-3"] {
-					inputajax(t.name)[class="form-control", aria-label="Family Name"]
-					div[class="input-group-append"] {
-						submit save()[class="btn btn-outline-secondary"]{<i class="far fa-save hov-pointer"></i>}
-					}
-					div[class="input-group-append"] {
-						button[class="btn btn-primary", data-bs-toggle="modal", data-bs-target="#confirm_delete"] {
-								<i class="fa fa-trash hov-pointer"></i>
-						}
-					}
-				}
-			}
-		}
-	}
-	action save() {
-		validate(loggedIn() && securityContext.principal == t.owner, "Only owner can edit");
-		t.save();
-	}
-}
-
-template confirm_modal(name : String) {
-	//https://getbootstrap.com/docs/5.0/components/modal/
-	<div class="modal fade" id="confirm_delete" tabindex="-1" aria-labelledby="confirmDelete" aria-hidden="true">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title">"Deleting " output(name)</h5>
-	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	      </div>
-	      <div class="modal-body">
-                <p>"Are you sure? "</p>
-	      </div>
-	      <div class="modal-footer">
-	        elements
-	      </div>
-	    </div>
-	  </div>
-	</div>
-}
-
-template confirm_delete(t : FamilyTree) {
-	confirm_modal(t.name){submit delete()[class="btn btn-primary"]{<i class="fa fa-check-square hov-pointer"></i>}}
-	action delete() {
-		validate(loggedIn() && securityContext.principal == t.owner, "Only owner can delete");
-		FamilyTree.delete(t);
-		goto root();
-	}
-}
-
 // Form with all user inputs
 template personedit(p : Person) {
 	//https://getbootstrap.com/docs/5.0/forms/layout/
@@ -312,36 +206,6 @@ template personcardsmall(p : Person) {
 	}
 }
 
-template person_info_extra_top {
-	// Override this template to insert extra information into person info on top.
-}
-
-template person_info_extra_bot {
-	// Override this template to insert extra information into person info below.
-}
-
-// List with all data about a user for use in the overview or search results.
-template person_info(p : Person) {
-	ul[class="list-group list-group-flush"] {
-		person_info_extra_top
-		person_item("fas fa-venus-mars", "Gender", true){output( p.gender)}
-		person_item("fas fa-birthday-cake", "Birthday", true){output( p.birthday)}
-		person_item("fas fa-city", "Birth Place", p.birthplace != null && p.birthplace.length() > 0){output( p.birthplace)}
-		person_item("fas fa-cross", "Alive", p.passingdate != null){output(p.passingdate)}
-		person_item("fas fa-birthday-cake", "Age", true){output(p.getAge() + " years")}
-		for(parent : Person in p.parents) {
-			person_item_link(parent, "fas fa-user", "Parent")//{navigate person(p)[style="zIndex: 2; position: 'inherit'"]{output(parent.fullname())}}
-		}
-		if(p.parents.length < 2) {
-			person_item("fas fa-user", "Parent", false)
-		}
-		if(p.parents.length < 1) {
-			person_item("fas fa-user", "Parent", false)
-		}
-		person_info_extra_bot
-	}
-}
-
 // Links to the different pages of this user.
 template personNavigation(p : Person) {
 	<ul class="pagination pagination-lg" all attributes>
@@ -364,9 +228,7 @@ template personNavigation(p : Person) {
 template personcard(p : Person) {
 	//https://getbootstrap.com/docs/5.0/layout/grid/
 	//https://getbootstrap.com/docs/5.0/layout/containers/
-	//https://getbootstrap.com/docs/5.0/components/list-group/
-	var siblings := p.siblings()
-	
+	//https://getbootstrap.com/docs/5.0/components/list-group/	
 	div[class="container card-container"] {
 		div[class="card"] {
 			div[class="row gx-0"]  {
@@ -388,40 +250,6 @@ template personcard(p : Person) {
 						}
 						div[class="card-body p-0"]  {
 							person_info(p)
-							// <ul class="list-group list-group-flush">
-							// 	person_item("First Name"){output(p.firstname)}
-							// 	person_item("Middle Name(s)"){output(p.middlenames)}
-							// 	person_item("Last Name"){output(p.lastname)}
-							// 	person_item("Gender"){output( p.gender)}
-							// 	
-  					// 			<li class="list-group-item"></li>
-							// 	person_item("Birthday"){output( p.birthday)}
-							// 	person_item("Birth Place"){output( p.birthplace)}
-							// 	person_item("Day of passing"){output(p.passingdate)}
-							// 	person_item("Age"){output(p.getAge() + " years")}
-							// 	
-							// 	if(p.parents.length > 0) {
-							// 		<li class="list-group-item"></li>
-							// 	}
-							// 	for(parent : Person in p.parents) {
-							// 		person_item("Parent"){navigate person(parent){output(parent.fullname())}}
-							// 	}
-							// 	
-							// 	if(p.children.length > 0) {
-							// 		<li class="list-group-item"></li>
-							// 	}
-							// 	for(child : Person in p.children) {
-							// 		person_item("Child"){navigate person(child){output(child.fullname())}}
-							// 	}
-							// 	
-							// 	if(siblings.length > 0) {
-							// 		<li class="list-group-item"></li>
-							// 	}
-							// 	for(s : Person in siblings) {
-							// 		sibling(s)
-							// 		
-							// 	}
-							// </ul>
 						}
 					}
 				}
@@ -463,6 +291,36 @@ template userImage(p : Person) {
 	}
 }
 
+template person_info_extra_top {
+	// Override this template to insert extra information into person info on top.
+}
+
+template person_info_extra_bot {
+	// Override this template to insert extra information into person info below.
+}
+
+// List with all data about a user for use in the overview or search results.
+template person_info(p : Person) {
+	ul[class="list-group list-group-flush"] {
+		person_info_extra_top
+		person_item("fas fa-venus-mars", "Gender", true){output( p.gender)}
+		person_item("fas fa-birthday-cake", "Birthday", true){output( p.birthday)}
+		person_item("fas fa-city", "Birth Place", p.birthplace != null && p.birthplace.length() > 0){output( p.birthplace)}
+		person_item("fas fa-cross", "Alive", p.passingdate != null){output(p.passingdate)}
+		person_item("fas fa-birthday-cake", "Age", true){output(p.getAge() + " years")}
+		for(parent : Person in p.parents) {
+			person_item_link(parent, "fas fa-user", "Parent")
+		}
+		if(p.parents.length < 2) {
+			person_item("fas fa-user", "Parent", false)
+		}
+		if(p.parents.length < 1) {
+			person_item("fas fa-user", "Parent", false)
+		}
+		person_info_extra_bot
+	}
+}
+
 // Display children prepended with a prepended font-awesome class
 // value should be an boolean expression to check if the children should be used
 // or the place holder.
@@ -482,22 +340,19 @@ template person_item(symbol : String, placehold : String, value : Bool) {
 	}
 }
 
-// Display children prepended with a prepended font-awesome class
-// value should be an boolean expression to check if the children should be used
-// or the place holder.
+// Display a url to this person prepended with a symbol 
 template person_item_link(p : Person, symbol : String, placehold : String) {
-	navigate person(p)[class="list-group-item", style="z-index:2; position:'inherit'"] {
-		div[class="float-start"] {
-			faIcon[class=symbol]
-		}
-		div[class="float-end"] {
-			if(p != null) {
-				output(p.fullname())				
-			} else {
-				<span class="text-muted">output(placehold)</span>
+	if (p != null) {
+		navigate person(p)[class="list-group-item", style="z-index:2; position:'inherit'"] {
+			div[class="float-start"] {
+				faIcon[class=symbol]
 			}
-			
+			div[class="float-end"] {
+				output(p.fullname())
+			}
 		}
+	} else {
+		person_item(symbol, placehold, false)
 	}
 }
 
