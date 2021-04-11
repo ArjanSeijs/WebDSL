@@ -4,6 +4,10 @@ module src/header
 imports src/search
 imports src/templates
 
+template myheaderExtra {
+	//Override this template to insert extra navigation into the header
+}
+
 template myheader() {
 		var q : String
 		// https://getbootstrap.com/docs/5.0/components/navbar/
@@ -18,7 +22,7 @@ template myheader() {
 						if(loggedIn()) {
 							familyTreeList
 						}
-						elements //extra links for other pages
+						myheaderExtra//elements //extra links for other pages
 					</ul>
 					<ul class="navbar-nav">
 						if(loggedIn()) {

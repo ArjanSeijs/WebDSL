@@ -58,6 +58,7 @@ imports src/search
 			} 
 		</article>
 		</div>
+		
 		action register(){
 				user.password := user.password.digest();
 				user.save();
@@ -91,6 +92,7 @@ imports src/search
 			} 
 		</article>
 		</div>
+		
 		action login(){
 			    validate(authenticate(username,password), 
 			      "The login credentials are not valid.");
@@ -115,7 +117,7 @@ imports src/search
 	}
 	
 	override page pagenotfound() {
-		title{ "myapp / page not found (404)" }
+		title{ "Page not found (404)" }
 		main {
 			myheader
 			<div class="d-flex justify-content-center">
@@ -125,10 +127,10 @@ imports src/search
 	}
 	
 	override page accessDenied() {
-		title{ "myapp / acces denied (401)" }
+		title{ "Accces denied (401)" }
 		main {
 			myheader
-			<div class="d-flex justify-content-center">
+			<div class="d-flex justify-content-center p-2">
 				image("https://imgs.xkcd.com/comics/incident.png")
 			</div>
 		}
@@ -141,11 +143,19 @@ imports src/search
 		return loggedIn() && (securityContext.principal == t.owner || securityContext.principal in t.canEdit);
 	}
 	
+	function canEdit(p : Person) : Bool {
+		return canEdit(p.family);
+	}
+	
 	/*
 	Check whether the current user (if logged in) has the permission to view this family tree
 	*/
 	function canSee(t : FamilyTree) : Bool {
 		return t.public || (loggedIn() && (securityContext.principal == t.owner || securityContext.principal in t.canSee));
+	}
+	
+	function canSee(p : Person) : Bool {
+		return canSee(p.family);
 	}
 	
 	principal is User with credentials username, password
@@ -157,18 +167,18 @@ imports src/search
     rule page root(){true}
     rule page accessDenied() {true}
     
-    rule page direct_family_tree(p : Person) {canSee(p.family)}
+    rule page direct_family_tree(p : Person) {canSee(p)}
     rule page family_overview(t: FamilyTree) {canSee(t)}
-    rule page family_tree_canvas(p : Person) {canSee(p.family)}
-    rule page person_edit(p : Person) {canEdit(p.family)} 
-    rule page person(p : Person) {canSee(p.family)}
+    rule page family_tree_canvas(p : Person) {canSee(p)}
+    rule page person_edit(p : Person) {canEdit(p)} 
+    rule page person(p : Person) {canSee(p)}
     rule page search(*) {true}
      
 	rule template item {true}
-	rule template personcard(p : Person) {canSee(p.family)} 
-	rule template personcardsmall(p : Person) {canSee(p.family)} 
-	rule template person_edit(p : Person) {canEdit(p.family)} 
-	rule template personresult(p : Person) { canSee(p.family)}
+	rule template personcard(p : Person) {canSee(p)} 
+	rule template personcardsmall(p : Person) {canSee(p)} 
+	rule template person_edit(p : Person) {canEdit(p)} 
+	rule template personresult(p : Person) { canSee(p)}
 	
 	rule template family_edit_menu(t : FamilyTree) {canEdit(t)}
 	
@@ -178,14 +188,14 @@ imports src/search
 	rule template family_edit_new_child(t : FamilyTree) {canEdit(t)}
 	rule template family_edit_add_sibling(t : FamilyTree) {canEdit(t)}
 	rule template family_edit_add_child(t : FamilyTree) {canEdit(t)}
-	rule template family_edit_permissions(t : FamilyTree) {securityContext.principal == t.owner}
+	rule template family_edit_permissions(t : FamilyTree) {securityContext.principal == t.owner} //Only owner can edit permissions
 	
 	rule template familyTreeList {loggedIn()}
 	
 	rule template * {true}
 	rule template *(*) {true}
 	
-	rule ajaxtemplate descpreview(p:Person){canEdit(p.family)}
+	rule ajaxtemplate descpreview(p:Person){canEdit(p)}
 	
 	// Acces rule for services
 	rule page user_register {true}
@@ -197,12 +207,12 @@ imports src/search
 	rule page user_newFamily() {loggedIn()}
 	
 	rule page user_people(f : FamilyTree) {canSee(f)}
-	rule page user_person(p : Person) {canSee(p.family)}
-	rule page getImageFile(p : Person) {canSee(p.family)}
+	rule page user_person(p : Person) {canSee(p)}
+	rule page getImageFile(p : Person) {canSee(p)}
 	
 	rule page user_setFamilyName(f : FamilyTree) {canEdit(f)}
 	rule page user_newPerson(f : FamilyTree) {canEdit(f)}
-	rule page user_editPerson(p : Person) {canEdit(p.family)}
-	rule page user_validParents(p : Person) {canEdit(p.family)}
+	rule page user_editPerson(p : Person) {canEdit(p)}
+	rule page user_validParents(p : Person) {canEdit(p)}
 	
 	rule page sv_search(*) {true}

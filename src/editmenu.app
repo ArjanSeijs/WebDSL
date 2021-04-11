@@ -6,6 +6,83 @@ imports src/tree
 imports src/templates
 imports src/header
 
+
+
+// Buttons to update the session values for use in the edit menu, these are hiddend and handled through javascript.
+template edit_buttons(p : Person) {
+	
+	if(canEdit(p.family)) {
+		button[onclick := edit_new_sibling(p), class="d-none", name="edit-new-sibling"]
+	
+		button[onclick := edit_add_sibling_p(p), class="d-none", name="edit-add-sibling-p"]
+		button[onclick := edit_add_sibling_s(p), class="d-none", name="edit-add-sibling-s"]
+		
+		button[onclick := edit_new_child_p1(p), class="d-none", name="edit-new-child-p1"]
+		button[onclick := edit_new_child_p2(p), class="d-none", name="edit-new-child-p2"]
+		
+		button[onclick := edit_add_child_p1(p), class="d-none", name="edit-add-child-p1"]
+		button[onclick := edit_add_child_p2(p), class="d-none", name="edit-add-child-p2"]
+		button[onclick := edit_add_child_c(p), class="d-none", name="edit-add-child-c"]
+		
+		button[onclick := edit_new_parent(p), class="d-none", name="edit-new-parent"]
+	}
+	
+	
+	action edit_new_sibling(person : Person) {
+		validate(canEdit(p.family), "Not allowed to edit");
+		edit_new_sibling.p := person;
+	}
+	
+	
+	
+	action edit_add_sibling_p(person : Person) {
+		validate(canEdit(p.family), "Not allowed to edit");
+		edit_add_sibling.p := person;
+	}
+	
+	action edit_add_sibling_s(person : Person) {
+		validate(canEdit(p.family), "Not allowed to edit");
+		edit_add_sibling.sibling := person;
+	}
+	
+	
+	
+	action edit_new_child_p1(person : Person) {
+		validate(canEdit(p.family), "Not allowed to edit");
+		edit_new_child.p1 := person;
+	}
+	
+	action edit_new_child_p2(person : Person) {
+		validate(canEdit(p.family), "Not allowed to edit");
+		edit_new_child.p2 := person;
+	}
+	
+	
+	
+	action edit_add_child_p1(person : Person) {
+		validate(canEdit(p.family), "Not allowed to edit");
+		edit_add_child.p1 := person;
+	}
+	
+	action edit_add_child_p2(person : Person) {
+		validate(canEdit(p.family), "Not allowed to edit");
+		edit_add_child.p2 := person;
+	}
+	
+	action edit_add_child_c(person : Person) {
+		validate(canEdit(p.family), "Not allowed to edit");
+		edit_add_child.child := person;
+	}
+	
+	
+	
+	action edit_new_parent(person : Person) {
+		validate(canEdit(p.family), "Not allowed to edit");
+		edit_new_parent.p := person;
+	}
+	
+}
+
 template family_edit_menu(t : FamilyTree) {
 	//https://getbootstrap.com/docs/5.0/components/accordion/
 	div[class="accordion bg-white sticky-top", id="family_edit_menu"] {
