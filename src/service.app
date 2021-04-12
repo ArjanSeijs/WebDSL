@@ -1,6 +1,7 @@
 module src/service
 
 imports src/search
+imports src/tree
 
 service user_login() {
 	if(getHttpMethod() == "POST") {
@@ -94,6 +95,11 @@ service user_families() {
 	}
 }
 
+service user_personTree(p : Person) {
+	if(getHttpMethod() == "GET") {
+		return jsonTree(p, 10);
+	}
+}
 /*
 Base used everywhere and to represent parents and siblings.
 */
