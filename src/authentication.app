@@ -212,7 +212,9 @@ imports src/search
 	
 	rule page user_setFamilyName(f : FamilyTree) {canEdit(f)}
 	rule page user_newPerson(f : FamilyTree) {canEdit(f)}
+	rule page user_deletePerson(p : Person) {canEdit(p)}
 	rule page user_editPerson(p : Person) {canEdit(p)}
 	rule page user_validParents(p : Person) {canEdit(p)}
+	
 	
 	rule page sv_search(*) {true}

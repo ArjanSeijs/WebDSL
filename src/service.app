@@ -99,7 +99,7 @@ Base used everywhere and to represent parents and siblings.
 */
 function jsonPersonBase(p : Person) : JSONObject {
 	var obj := JSONObject();
-	obj.put("name", p.name); //If this person is referenced by other user.
+	obj.put("name", p.name); //Name for in forms
 	obj.put("fullname", p.fullname());
 	obj.put("uuid", p.id);
 	return obj;
@@ -166,15 +166,25 @@ function jsonPersonAll(p : Person) : JSONObject {
 }
 
 /**
+Information about a family
+*/
+function jsonFamily(f : FamilyTree) : JSONObject {
+	var obj := JSONObject();
+	obj.put("uuid", f.id);
+	obj.put("owner", f.owner.username);
+	obj.put("name", f.name);
+	obj.put("canEdit", canEdit(f));
+	return obj;
+}
+/**
 Get all information about a person.
 */
 service user_person(p : Person) {
 	if(getHttpMethod() == "GET") {
 		var response := JSONObject();
 		var obj := jsonPersonAll(p);
-		response.put("canEdit", canEdit(p.family));
-		response.put("owner", p.family.owner.username);
 		response.put("person", obj);
+		response.put("family", jsonFamily(p.family));
 		return response;
 	}
 }
@@ -201,6 +211,10 @@ service user_newPerson(f : FamilyTree) {
 		response.put("status", "success");
 		return response;
 	}
+}
+
+service user_deletePerson(p : Person) {
+	Person.delete(p);
 }
 
 service user_editPerson(p : Person) {
