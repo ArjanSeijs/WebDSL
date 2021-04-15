@@ -181,6 +181,7 @@ imports src/search
 	rule template personresult(p : Person) { canSee(p)}
 	
 	rule template family_edit_menu(t : FamilyTree) {canEdit(t)}
+	rule template family_edit_name(t : FamilyTree) {loggedIn() && securityContext.principal == t.owner}
 	
 	rule template family_edit_new_person(t : FamilyTree) {canEdit(t)}
 	rule template family_edit_new_sibling(t : FamilyTree) {canEdit(t)}
@@ -188,7 +189,7 @@ imports src/search
 	rule template family_edit_new_child(t : FamilyTree) {canEdit(t)}
 	rule template family_edit_add_sibling(t : FamilyTree) {canEdit(t)}
 	rule template family_edit_add_child(t : FamilyTree) {canEdit(t)}
-	rule template family_edit_permissions(t : FamilyTree) {securityContext.principal == t.owner} //Only owner can edit permissions
+	rule template family_edit_permissions(t : FamilyTree) {loggedIn() && securityContext.principal == t.owner} //Only owner can edit permissions
 	
 	rule template familyTreeList {loggedIn()}
 	

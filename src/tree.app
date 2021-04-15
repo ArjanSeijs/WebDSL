@@ -61,7 +61,6 @@ template direct_family_tree( p : Person) {
 }
 
 template direct_family_node(p : Person) {
-	
 	li {
 		div {
 			treeNodePart(p)
@@ -164,6 +163,7 @@ function jsonChild(child : Person, depth : Int) : JSONObject {
 	return obj;
 }
 
+// Recursive call for every child
 function jsonChildren(p : Person, depth : Int) : JSONArray {
 	var children := JSONArray();
 	for(child : Person in p.children) {
@@ -186,6 +186,7 @@ function jsonParent(parent : Person, depth : Int) : JSONObject {
 	return obj;
 }
 
+// Recursive call for every parent
 function jsonParents(p : Person, depth : Int) : JSONArray {
 	var parents := JSONArray();
 	for(parent : Person in p.parents) {

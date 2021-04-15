@@ -32,13 +32,15 @@ template myheader() {
 							}
 						} else {
 							item[class="dropdown"] {
-								<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="loginpage">"Login"</a>
+								navigate loginPage()[class="nav-link dropdown-toggle", data-bs-toggle="dropdown"]{"Login"}
+								//<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="loginpage">"Login"</a>
 	  							<div class="dropdown-menu navbar-dropdown-menu p-2">
 									logincard()
 								</div>
 							}
 							item[class="dropdown"] {
-								<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="register">"Register"</a>
+								navigate register()[class="nav-link dropdown-toggle", data-bs-toggle="dropdown"]{"Register"}
+								//<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="register">"Register"</a>
 	  							<div class="dropdown-menu navbar-dropdown-menu p-2">
 									registercard()
 								</div>

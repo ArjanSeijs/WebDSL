@@ -12,7 +12,7 @@ imports src/header
 template edit_buttons(p : Person) {
 	
 	if(canEdit(p.family)) {
-		button[onclick := edit_new_sibling(p), ajax, class="d-none", name="edit-new-sibling"]
+		button[onclick := edit_new_sibling(p), class="d-none", name="edit-new-sibling"]
 	
 		button[onclick := edit_add_sibling_p(p), class="d-none", name="edit-add-sibling-p"]
 		button[onclick := edit_add_sibling_s(p), class="d-none", name="edit-add-sibling-s"]

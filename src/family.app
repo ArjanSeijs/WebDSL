@@ -71,24 +71,30 @@ template family_overview_header(t : FamilyTree) {
 	}
 	// Content to be toggled
 	if(loggedIn() && securityContext.principal == t.owner){
-		div[id="edit_name", class="bg-white d-none"] {
-			form {
-				div[class="input-group mb-3"] {
-					inputajax(t.name)[class="form-control", aria-label="Family Name"]
-					div[class="input-group-append"] {
-						submit save()[class="btn btn-outline-secondary"]{<i class="far fa-save hov-pointer"></i>}
-					}
-					div[class="input-group-append"] {
-						button[class="btn btn-primary", data-bs-toggle="modal", data-bs-target="#confirm_delete"] {
-								<i class="fa fa-trash hov-pointer"></i>
-						}
+		family_edit_name(t)
+	}
+}
+
+template family_edit_name(t : FamilyTree) {
+	div[id="edit_name", class="bg-white d-none"] {
+		form {
+			div[class="input-group mb-3"] {
+				inputajax(t.name)[class="form-control", aria-label="Family Name"]
+				div[class="input-group-append"] {
+					submit save()[class="btn btn-outline-secondary"]{<i class="far fa-save hov-pointer"></i>}
+				}
+				div[class="input-group-append"] {
+					button[class="btn btn-primary", data-bs-toggle="modal", data-bs-target="#confirm_delete"] {
+							<i class="fa fa-trash hov-pointer"></i>
 					}
 				}
 			}
 		}
 	}
+	
 	action save() {
 		validate(loggedIn() && securityContext.principal == t.owner, "Only owner can edit");
 		t.save();
 	}
+	
 }
